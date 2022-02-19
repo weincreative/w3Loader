@@ -3,8 +3,30 @@ sudo apt-get upgrade
 sudo apt-get install unrar
 sudo apt-get install p7zip-full
 #pip install -r requirements.txt 
-#python -m pip install --upgrade pip
+sudo apt install python3-pip
+#python3 -m pip install --upgrade pip
 sudo apt install sqlite3
 alt+f2 software-properties-gtk
 https://howchoo.com/python/run-python-terminal
 https://code.visualstudio.com/docs/setup/linux
+sudo apt-get install git
+git clone [link]
+sudo apt-get update
+sudo apt-get install autotools-dev autoconf
+
+0merW3hacker3526*!venbot
+https://www.youtube.com/watch?v=XdpywfnqCb8&t=631s
+
+
+./start.sh
+
+https://www.geeksforgeeks.org/how-to-run-multiple-python-file-in-a-folder-one-after-another/
+#!/bin/bash
+
+for python_file_name in $(find $Folder_Path -name *.py)
+
+do
+
+   python $python_file_name
+
+done
