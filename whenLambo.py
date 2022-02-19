@@ -46,11 +46,11 @@ def sendUserTELEMsg(text,_token1,_token2,_receiver,time):
         time.sleep(1)
         
 parser = argparse.ArgumentParser(description='koinler')
-parser.add_argument('-sx','--symblx',type=str)
-parser.add_argument('-lx','--leverx',type=float)
-parser.add_argument('-bx','--basex',type=float)
-parser.add_argument('-sbx','--safeBasex',type=float)
-parser.add_argument('-stx','--maxSafeTradex',type=float)
+parser.add_argument('-sx','--symblx',type=str,default='BLZ')
+parser.add_argument('-lx','--leverx',type=float,default=0.0)
+parser.add_argument('-bx','--basex',type=float,default=0.0)
+parser.add_argument('-sbx','--safeBasex',type=float,default=0.0)
+parser.add_argument('-stx','--maxSafeTradex',type=float,default=0.0)
 args = parser.parse_args()
 
 # SETTİNGS
@@ -70,7 +70,9 @@ def optionsSelect():
     services.execute(f"SELECT * FROM optiOns")
     rows=services.fetchall()
     for row in rows:
-        baseOPTIONS.append(f"{row[1]}:{row[2]}:{row[3]}:{row[4]}:{row[5]}:{row[6]}:{row[7]}:{row[8]}:{row[9]}:{row[10]}:{row[11]}:{row[12]}:{row[13]}:{row[14]}:{row[15]}:{row[16]}:{row[17]}:{row[18]}:{row[19]}")    
+        baseOPTIONS.append(f"{row[4]}:{row[6]}:{row[7]}:{row[8]}:{row[9]}:{row[10]}:{row[11]}:{row[12]}:{row[15]}")    
+    for base in baseOPTIONS[0].split(":"):
+        underOptions.append(base)
 
 def SelectLongTakeProfit(symbly,side):
     services.execute(f"SELECT tid, orderEndPrice, origQty, active, orderStartPrice FROM activeOrder WHERE positionSide = '{side}' and orderSymbol = '{symbly}' and active = '1' ")
@@ -112,6 +114,7 @@ def sorEntryPrice(symbl,side):
                            
 #ATTRIBUTES
 baseOPTIONS = []
+underOptions = []
 _APPID = "ADMIN"
 
 first = True
@@ -131,10 +134,10 @@ secretKey = ""
 connection=sqlite3.connect(f'venBot-{_APPID}.db')
 services=connection.cursor()
 optionsSelect()
-
-if(baseOPTIONS[11] != "" and baseOPTIONS[12] != ""):
-    baseOPTIONS[11] = apiKey
-    baseOPTIONS[12] = secretKey
+print(underOptions)
+if(underOptions[6] != "" and underOptions[7] != ""):
+    underOptions[6] = apiKey
+    underOptions[7] = secretKey
             
 # API CONNECT
 exchange = ccxt.binance({
@@ -244,7 +247,7 @@ while True:
                 services.execute(f"INSERT INTO activeOrder VALUES (null, '{newSymbol}', '{currentPrice}', '{((currentPrice / 100) * priceDeviation) + currentPrice}', '{posSideTxt}', '{alinacak_miktar}', '{current_time}','1')")
                 connection.commit()
                 first = True
-                #sendUserTELEMsg(f"::BUY::\n{current_time}\nCoinSembol:{newSymbol} {int(leverage)}X\nLONG ENTER\nAmount: {alinacak_miktar}\nTradeCount: {tradeLongCount}\nPriceDeviation: {priceDeviation}", baseOPTIONS[7], baseOPTIONS[8], baseOPTIONS[10], current_time)
+                #sendUserTELEMsg(f"::BUY::\n{current_time}\nCoinSembol:{newSymbol} {int(leverage)}X\nLONG ENTER\nAmount: {alinacak_miktar}\nTradeCount: {tradeLongCount}\nPriceDeviation: {priceDeviation}", underOptions[2], underOptions[3], underOptions[5], current_time)
                 tradeLongCount += 1
                 alinacak_miktar = 0
             else:
@@ -257,7 +260,7 @@ while True:
                 services.execute(f"INSERT INTO activeOrder VALUES (null, '{newSymbol}', '{currentPrice}', '{((currentPrice / 100) * priceDeviation) + currentPrice}', '{posSideTxt}', '{alinacak_miktar}', '{current_time}','1')")
                 connection.commit()
                 first = True
-                #sendUserTELEMsg(f"::BUY::\n{current_time}\nCoinSembol:{newSymbol} {int(leverage)}X\nLONG ENTER\nAmount: {alinacak_miktar}\nTradeCount: {tradeLongCount}\nPriceDeviation: {priceDeviation}", baseOPTIONS[7], baseOPTIONS[8], baseOPTIONS[10], current_time)
+                #sendUserTELEMsg(f"::BUY::\n{current_time}\nCoinSembol:{newSymbol} {int(leverage)}X\nLONG ENTER\nAmount: {alinacak_miktar}\nTradeCount: {tradeLongCount}\nPriceDeviation: {priceDeviation}", underOptions[2], underOptions[3], underOptions[5], current_time)
                 tradeLongCount += 1
                 alinacak_miktar = 0
             time.sleep(1)
@@ -276,7 +279,7 @@ while True:
                 services.execute(f"INSERT INTO activeOrder VALUES (null, '{newSymbol}', '{currentPrice}', '{currentPrice - ((currentPrice / 100) * priceDeviation)}', '{posSideTxt}', '{alinacak_miktar}', '{current_time}','1')")
                 connection.commit()
                 first = True
-                #sendUserTELEMsg(f"::BUY::\n{current_time}\nCoinSembol:{newSymbol} {int(leverage)}X\nSHORT ENTER\nAmount: {alinacak_miktar}\nTradeCount: {tradeShortCount}\nPriceDeviation: {priceDeviation}", baseOPTIONS[7], baseOPTIONS[8], baseOPTIONS[10], current_time)
+                #sendUserTELEMsg(f"::BUY::\n{current_time}\nCoinSembol:{newSymbol} {int(leverage)}X\nSHORT ENTER\nAmount: {alinacak_miktar}\nTradeCount: {tradeShortCount}\nPriceDeviation: {priceDeviation}", underOptions[2], underOptions[3], underOptions[5], current_time)
                 tradeShortCount += 1
                 alinacak_miktar = 0
             else:
@@ -289,7 +292,7 @@ while True:
                 services.execute(f"INSERT INTO activeOrder VALUES (null, '{newSymbol}', '{currentPrice}', '{currentPrice - ((currentPrice / 100) * priceDeviation)}', '{posSideTxt}', '{alinacak_miktar}', '{current_time}','1')")
                 connection.commit()
                 first = True 
-                #sendUserTELEMsg(f"::BUY::\n{current_time}\nCoinSembol:{newSymbol} {int(leverage)}X\nSHORT ENTER\nAmount: {alinacak_miktar}\nTradeCount: {tradeShortCount}\nPriceDeviation: {priceDeviation}", baseOPTIONS[7], baseOPTIONS[8], baseOPTIONS[10], current_time)
+                #sendUserTELEMsg(f"::BUY::\n{current_time}\nCoinSembol:{newSymbol} {int(leverage)}X\nSHORT ENTER\nAmount: {alinacak_miktar}\nTradeCount: {tradeShortCount}\nPriceDeviation: {priceDeviation}", underOptions[2], underOptions[3], underOptions[5], current_time)
                 tradeShortCount += 1
                 alinacak_miktar = 0
             time.sleep(1)
@@ -304,7 +307,7 @@ while True:
                 if tradeLongCount > 1:
                     tradeLongCount -= 1
                 print(f"{newSymbol}: LONG TAKE PROFIT : {exractCoin[0]} : Start:{exractCoin[4]}, End:{exractCoin[1]} > current: {currentPrice}")
-                #sendUserTELEMsg(f"{current_time}:{newSymbol}: LONG SATTIM 0.50$ KAR", baseOPTIONS[7], baseOPTIONS[8], baseOPTIONS[10], current_time)
+                #sendUserTELEMsg(f"{current_time}:{newSymbol}: LONG SATTIM 0.50$ KAR", underOptions[2], underOptions[3], underOptions[5], current_time)
                 services.execute(f"INSERT INTO orderHistory VALUES (null, '{newSymbol}', '{currentPrice}', '{((currentPrice / 100) * priceDeviation) + currentPrice}', '{posSideTxt}', '{alinacak_miktar}', '0.5', '{current_time}','1')")
                 services.execute(f"UPDATE activeOrder SET active = '0' WHERE tid = '{exractCoin[0]}'")
                 setYeniMaxMargin= float(TOPUSDT[0]) + 0.50
@@ -322,7 +325,7 @@ while True:
                 if tradeShortCount > 1:
                     tradeShortCount -= 1
                 print(f"{newSymbol}: SHORT TAKE PROFIT : {exractCoin[0]} : Start:{exractCoin[4]}, End:{exractCoin[1]} > current: {currentPrice}")
-                #sendUserTELEMsg(f"{current_time}:{newSymbol}: SHORT SATTIM 0.50$ KAR", baseOPTIONS[7], baseOPTIONS[8], baseOPTIONS[10], current_time)
+                #sendUserTELEMsg(f"{current_time}:{newSymbol}: SHORT SATTIM 0.50$ KAR", underOptions[2], underOptions[3], underOptions[5], current_time)
                 services.execute(f"INSERT INTO orderHistory VALUES (null, '{newSymbol}', '{currentPrice}', '{currentPrice - ((currentPrice / 100) * priceDeviation)}', '{posSideTxt}', '{alinacak_miktar}', '0.5', '{current_time}','1')")
                 services.execute(f"UPDATE activeOrder SET active = '0' WHERE tid = '{exractCoin[0]}'")
                 setYeniMaxMargin= float(TOPUSDT[0]) + 0.50
