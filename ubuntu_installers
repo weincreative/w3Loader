@@ -17,7 +17,7 @@ sudo apt-get install autotools-dev autoconf
 0merW3hacker3526*!venbot
 https://www.youtube.com/watch?v=XdpywfnqCb8&t=631s
 
-
+chmod +x [filePATH]/the_file_name
 ./start.sh
 
 https://www.geeksforgeeks.org/how-to-run-multiple-python-file-in-a-folder-one-after-another/
