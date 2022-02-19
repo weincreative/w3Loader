@@ -10,7 +10,7 @@ alt+f2 software-properties-gtk
 https://howchoo.com/python/run-python-terminal
 https://code.visualstudio.com/docs/setup/linux
 sudo apt-get install git
-git clone [link]
+git clone https://github.com/weincreative/w3Loader.git
 sudo apt-get update
 sudo apt-get install autotools-dev autoconf
 
