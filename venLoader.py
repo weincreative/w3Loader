@@ -40,6 +40,7 @@ _APPBASEORDER = ""
 _APPSAFEORDER = ""
 _APPMAXORDERSIZE = ""
 
+firstControl = False
 tenMinLoginFT = False
 telegramSendingUser = False
 telegramSendingAdmin = False
@@ -190,7 +191,9 @@ while True:
                     _APPMAXORDERSIZE = exracter[18].strip()
                     services.execute(f"INSERT INTO optiOns VALUES (null, '{_APPID}', '{_APPMAIL}', '{_APPTC}', '{_APPENDDAY}', '{_APPCOINCOUNT}', '{_APPUSERFIRSTDAY}', '{_APPTELEGRAMMAINTOKENBASE}', '{_APPTELEGRAMMAINTOKEN}', '{_APPTELEGRAMMAINID}', '{_APPTELEGRAMUSERID}', '{_APPAPIKEY}', '{_APPSECRETKEY}', '{_APPCOINS}', '{_APPTOPUSDT}', '{_APPSERVERNAME}', '{_APPLEVERAGE}', '{_APPBASEORDER}', '{_APPSAFEORDER}', '{_APPMAXORDERSIZE}')")
                     connection.commit()
-                    print(f"User: {_APPID} Started..")
+                    if firstControl == False:
+                        print(f"User: {_APPID} Started..")
+                        firstControl = True
                     
                     #Runner.sh Writer
                     with open('runner.sh','w') as file_object:
