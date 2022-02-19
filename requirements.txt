@@ -1,9 +1,0 @@
-ccxt
-pandas
-db-sqlite3
-requests
-python-telegram-bot
-bs4
-argparse
-fernet
-numpy
