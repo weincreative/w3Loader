@@ -6,6 +6,8 @@ sudo apt-get install p7zip-full
 sudo apt install python3-pip
 #python3 -m pip install --upgrade pip
 sudo apt install sqlite3
+sudo apt update
+sudo apt install sqlitebrowser
 alt+f2 software-properties-gtk
 https://howchoo.com/python/run-python-terminal
 https://code.visualstudio.com/docs/setup/linux
