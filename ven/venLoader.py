@@ -273,68 +273,61 @@ while True:
                         #subprocess.call(shlex.split(f"./test.sh param1 {your_python_var} param3"))
                         #subprocess.Popen(['runner.sh'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-                    if _APPID == "ADMIN":
-                        services.execute(f"UPDATE toplamValletUSDT set valueMaxMargin = '7914.5' where tid = '1' ")
-                        connection.commit()
-                    break # BUNU SILMEZSEN DEVAM ETMEZ
+        if _APPID == "ADMIN":
+            services.execute(f"UPDATE toplamValletUSDT set valueMaxMargin = '7914.5' where tid = '1' ")
+            connection.commit()
+            activeControler = False
+        break # BUNU SILMEZSEN DEVAM ETMEZ
+        if tenMinLoginFT == True:
+            while True:
+                if activeControler == False:
+                    localBuffer = []
+                    #ZRapor DB SELECT
+                    SelectKazancProfit(current_day)
+                    SelectDayWin(current_day)
+                    SelectMaxMargin()
+                    #GitHub Authorization Controler
+                    url=f"https://github.com/weincreative/w3Loader/blob/main/Authorization"
+                    soup2=bs(requests.get(url).content, "html.parser")    
+                    for row2 in soup2.find("table").find_all("tr"):
+                        tds2=row2.find_all("td")
+                        exracter2 = tds2[1].text.strip().split(":")
+                        USERCONTROL2 = exracter2[0].strip()
+                        if USERCONTROL2 == _APPID:
+                            localBuffer.append(exracter2)
+                            if localBuffer != bufferApp:
+                                print(f"Records changed, database will be updated")
+                                activeControler = True
+                                break
+                            else:
+                                #User Hourly ZRapor
+                                for x in Kazanc:
+                                    time.sleep(1)
+                                    if(x != "" and str(hourlyZ) == '59' and telegramSendingUser == False):
+                                        print(f"{current_time}\n::::::::: SAATLIK Z RAPORU ::::::::: \n _______________________________ \nTOPLAM CÜZDAN USDT MİKTARI = {TOPUSDT[0]}$ \nBUGÜN KAZANILAN TOPLAM USDT : {DAYWINUSDT[0]}$ \n _______________________________ \n:: BUGÜN KAZANILAN COIN BAZINDA DÖKÜMÜ :: \n{Kazanc}")
+                                        sendUserTELEMsg(f"::::::::: SAATLIK Z RAPORU ::::::::: \n _______________________________ \nTOPLAM CÜZDAN USDT MİKTARI = {TOPUSDT[0]}$ \nBUGÜN KAZANILAN TOPLAM USDT : {DAYWINUSDT[0]}$ \n _______________________________ \n:: BUGÜN KAZANILAN COIN BAZINDA DÖKÜMÜ :: \n{Kazanc}",_APPTELEGRAMMAINTOKENBASE,_APPTELEGRAMMAINTOKEN,_APPTELEGRAMUSERID,current_time)
+                                        telegramSendingUser = True
+                                        Kazanc.clear()
+                                    if(x != "" and str(hourlyZ) == '00' and telegramSendingUser == True):
+                                        telegramSendingUser = False
+                                    
+                                #ADMIN Daily ZRapor
+                                for y in Kazanc:
+                                    time.sleep(1)
+                                    if(y != "" and str(daylyZ) == '23:57' and telegramSendingAdmin == False):
+                                        print(f"{current_time}\n{_APPID}\n::::::::: GUNLUK Z RAPORU ::::::::: \n _______________________________ \nTOPLAM CÜZDAN USDT MİKTARI = {TOPUSDT[0]}$ \nBUGÜN KAZANILAN TOPLAM USDT : {DAYWINUSDT[0]}$ \n _______________________________ \n:: BUGÜN KAZANILAN COIN BAZINDA DÖKÜMÜ :: \n{Kazanc}")
+                                        sendMainTELEMsg(f"::::::::: GUNLUK Z RAPORU ::::::::: \n _______________________________ \nTOPLAM CÜZDAN USDT MİKTARI = {TOPUSDT[0]}$ \nBUGÜN KAZANILAN TOPLAM USDT : {DAYWINUSDT[0]}$ \n _______________________________ \n:: BUGÜN KAZANILAN COIN BAZINDA DÖKÜMÜ :: \n{Kazanc}",_APPTELEGRAMMAINTOKENBASE,_APPTELEGRAMMAINTOKEN,_APPTELEGRAMMAINID,current_time)
+                                        telegramSendingAdmin = True
+                                        Kazanc.clear()
+                                    if(y != "" and str(daylyZ) == '23:58' and telegramSendingAdmin == True):
+                                        telegramSendingAdmin = False 
+                            time.sleep(60)  
+                    if activeControler == True:
+                        if firstControl == True:
+                            print(f"User: {_APPID} Updated..")
+                        break
                 
-                    activeControler = False
-                    while True:
-                        try:
-                            if activeControler == False:
-                                localBuffer = []
-                                #ZRapor DB SELECT
-                                SelectKazancProfit(current_day)
-                                SelectDayWin(current_day)
-                                SelectMaxMargin()
-                                #GitHub Authorization Controler
-                                url=f"https://github.com/weincreative/w3Loader/blob/main/Authorization"
-                                soup2=bs(requests.get(url).content, "html.parser")    
-                                for row2 in soup2.find("table").find_all("tr"):
-                                    tds2=row2.find_all("td")
-                                    exracter2 = tds2[1].text.strip().split(":")
-                                    USERCONTROL2 = exracter2[0].strip()
-                                    if USERCONTROL2 == _APPID:
-                                        localBuffer.append(exracter2)
-                                        if localBuffer != bufferApp:
-                                            print(f"Records changed, database will be updated")
-                                            activeControler = True
-                                            break
-                                        else:
-                                            #User Hourly ZRapor
-                                            for x in Kazanc:
-                                                time.sleep(1)
-                                                if(x != "" and str(hourlyZ) == '59' and telegramSendingUser == False):
-                                                    print(f"{current_time}\n::::::::: SAATLIK Z RAPORU ::::::::: \n _______________________________ \nTOPLAM CÜZDAN USDT MİKTARI = {TOPUSDT[0]}$ \nBUGÜN KAZANILAN TOPLAM USDT : {DAYWINUSDT[0]}$ \n _______________________________ \n:: BUGÜN KAZANILAN COIN BAZINDA DÖKÜMÜ :: \n{Kazanc}")
-                                                    sendUserTELEMsg(f"::::::::: SAATLIK Z RAPORU ::::::::: \n _______________________________ \nTOPLAM CÜZDAN USDT MİKTARI = {TOPUSDT[0]}$ \nBUGÜN KAZANILAN TOPLAM USDT : {DAYWINUSDT[0]}$ \n _______________________________ \n:: BUGÜN KAZANILAN COIN BAZINDA DÖKÜMÜ :: \n{Kazanc}",_APPTELEGRAMMAINTOKENBASE,_APPTELEGRAMMAINTOKEN,_APPTELEGRAMUSERID,current_time)
-                                                    telegramSendingUser = True
-                                                    Kazanc.clear()
-                                                if(x != "" and str(hourlyZ) == '00' and telegramSendingUser == True):
-                                                    telegramSendingUser = False
-                                                
-                                            #ADMIN Daily ZRapor
-                                            for y in Kazanc:
-                                                time.sleep(1)
-                                                if(y != "" and str(daylyZ) == '23:57' and telegramSendingAdmin == False):
-                                                    print(f"{current_time}\n{_APPID}\n::::::::: GUNLUK Z RAPORU ::::::::: \n _______________________________ \nTOPLAM CÜZDAN USDT MİKTARI = {TOPUSDT[0]}$ \nBUGÜN KAZANILAN TOPLAM USDT : {DAYWINUSDT[0]}$ \n _______________________________ \n:: BUGÜN KAZANILAN COIN BAZINDA DÖKÜMÜ :: \n{Kazanc}")
-                                                    sendMainTELEMsg(f"::::::::: GUNLUK Z RAPORU ::::::::: \n _______________________________ \nTOPLAM CÜZDAN USDT MİKTARI = {TOPUSDT[0]}$ \nBUGÜN KAZANILAN TOPLAM USDT : {DAYWINUSDT[0]}$ \n _______________________________ \n:: BUGÜN KAZANILAN COIN BAZINDA DÖKÜMÜ :: \n{Kazanc}",_APPTELEGRAMMAINTOKENBASE,_APPTELEGRAMMAINTOKEN,_APPTELEGRAMMAINID,current_time)
-                                                    telegramSendingAdmin = True
-                                                    Kazanc.clear()
-                                                if(y != "" and str(daylyZ) == '23:58' and telegramSendingAdmin == True):
-                                                    telegramSendingAdmin = False 
-                                        time.sleep(60)  
-                                if activeControler == True:
-                                    if firstControl == True:
-                                        print(f"User: {_APPID} Updated..")
-                                    break
-                                
-                        except Exception as Error:
-                            print(f"[ERROR] : {Error}")
-                            services.execute(f"INSERT INTO consoleLog VALUES (null,'GitHub Authorization Controler:{Error}','{current_time}')")
-                            connection.commit()
-                            time.sleep(20)
-                            continue 
-    
+
     except Exception as Error:
         print(f"[ERROR] : {Error}")
         services.execute(f"INSERT INTO consoleLog VALUES (null,'GitHub Authorization:{Error}','{current_time}')")
